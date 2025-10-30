@@ -1,0 +1,66 @@
+Departure Station,Arrival Destination
+birmingham new street,coventry
+birmingham new street,edinburgh
+birmingham new street,liverpool lime street
+birmingham new street,london euston
+birmingham new street,london kings cross
+birmingham new street,london paddington
+birmingham new street,london st pancras
+birmingham new street,manchester piccadilly
+birmingham new street,nuneaton
+birmingham new street,reading
+birmingham new street,stafford
+birmingham new street,tamworth
+birmingham new street,wolverhampton
+birmingham new street,york
+bristol temple meads,cardiff central
+edinburgh waverley,london kings cross
+liverpool lime street,birmingham new street
+liverpool lime street,crewe
+liverpool lime street,leeds
+liverpool lime street,london euston
+liverpool lime street,london paddington
+liverpool lime street,london st pancras
+liverpool lime street,manchester piccadilly
+liverpool lime street,sheffield
+london euston,birmingham new street
+london euston,manchester piccadilly
+london euston,oxford
+london euston,york
+london kings cross,edinburgh waverley
+london kings cross,liverpool lime street
+london kings cross,york
+london paddington,liverpool lime street
+london paddington,london waterloo
+london paddington,manchester piccadilly
+london paddington,oxford
+london paddington,reading
+london st pancras,birmingham new street
+london st pancras,leicester
+london st pancras,wolverhampton
+manchester piccadilly,leeds
+manchester piccadilly,liverpool lime street
+manchester piccadilly,london euston
+manchester piccadilly,london kings cross
+manchester piccadilly,london paddington
+manchester piccadilly,london st pancras
+manchester piccadilly,nottingham
+manchester piccadilly,sheffield
+manchester piccadilly,warrington
+manchester piccadilly,york
+oxford,bristol temple meads
+reading,birmingham new street
+reading,didcot
+reading,liverpool lime street
+reading,london paddington
+reading,oxford
+reading,swindon
+york,birmingham new street
+york,doncaster
+york,durham
+york,edinburgh
+york,edinburgh waverley
+york,leeds
+york,liverpool lime street
+york,peterborough
+york,wakefield

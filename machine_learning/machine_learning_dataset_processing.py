@@ -31,5 +31,6 @@ df["Lead Time"] = ( df["Date of Journey"] - df["Date of Purchase"])
 # Categorize delays
 df['Delay Category'] = df.apply(pfi.categorize_delay, axis=1)
 
-df.to_csv('cleaned_dataset66.csv', index=False)
+
+df.to_csv('../UK-Train-Rides/machine_learning/datasets/processed.csv', index=False)
 
