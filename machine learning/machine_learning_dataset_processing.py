@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import processing_function_implementation as pfi
 df=pd.read_csv(r'../UK-Train-Rides/cleaned_dataset.csv')
 
 # Convert time columns to datetime
@@ -9,18 +10,26 @@ df["Date of Purchase"] = pd.to_datetime(df["Date of Purchase"])
 df["Date of Journey"] = pd.to_datetime(df["Date of Journey"])
 df["Arrival Time"] = pd.to_datetime(df["Arrival Time"])
 
-
 print(df.dtypes)
+
+# Fill missing values due to cancellations
+df['Actual Arrival Time'] = df['Actual Arrival Time'].fillna('cancelled')
+
 
 
 # Calculate trip time and actual trip time
-df["Actual Trip Time"]= df["Actual Arrival Time"] - df["Departure Time"]
-df["Trip Time"]= df["Arrival Time"] - df["Departure Time"]
+df["Actual Trip Time"]= df.apply(pfi.actual_trip_time, axis=1)
+df["Trip Time"]= df.apply(pfi.trip_time, axis=1)
 
 # Calculate percentage delay
-df["Percentage Delay"]= ((df["Actual Trip Time"]-df["Trip Time"]) / df["Trip Time"]) * 100
+df["Delay Time"]=df.apply(pfi.delay_time, axis=1)
+df["Percentage Delay"]= df.apply(pfi.delay_percentage, axis=1)
 
 #Calculating lead time
 df["Lead Time"] = ( df["Date of Journey"] - df["Date of Purchase"])
 
-df.to_csv('../UK-Train-Rides/machine learning/cleaned_dataset2.csv', index=False)
+# Categorize delays
+df['Delay Category'] = df.apply(pfi.categorize_delay, axis=1)
+
+df.to_csv('cleaned_dataset66.csv', index=False)
+
