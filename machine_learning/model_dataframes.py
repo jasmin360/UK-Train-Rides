@@ -13,3 +13,18 @@ y_train_route_delay = route_delay['Percentage Delay']
 
 X_train_route_delay.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/entire/X_train.csv', index=False)
 y_train_route_delay.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/entire/y_train.csv', index=False)
+
+
+#ticket price
+ticket_price = mldp.df.copy()
+ticket_price= ticket_price.loc[:,['Ticket Type','Ticket Class','Departure Station', 'Arrival Destination', 'Railcard','Lead Time','Price' ]]
+
+ticket_price.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/ticket_price.csv', index=False)
+
+X_train_ticket_price = ticket_price[['Ticket Type','Ticket Class','Departure Station', 'Arrival Destination', 'Railcard','Lead Time']]
+y_train_ticket_price = ticket_price['Price']
+
+X_train_ticket_price.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/entire/X_train.csv', index=False)
+y_train_ticket_price.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/entire/y_train.csv', index=False)
+
+
