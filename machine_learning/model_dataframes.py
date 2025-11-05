@@ -28,3 +28,14 @@ X_train_ticket_price.to_csv('../UK-Train-Rides/machine_learning/datasets/model_d
 y_train_ticket_price.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/entire/y_train.csv', index=False)
 
 
+#Ticket Class Choice
+ticket_class_choice = mldp.df.copy()
+ticket_class_choice = ticket_class_choice.loc[:,['Departure Station', 'Arrival Destination','Railcard','Ticket Type','Lead Time','Price','Ticket Class' ]]
+
+ticket_class_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_class_choice/ticket_class_choice.csv', index=False)
+
+X_train_ticket_class_choice = ticket_class_choice[['Departure Station', 'Arrival Destination','Railcard','Ticket Type','Lead Time','Price']]
+y_train_ticket_class_choice = ticket_class_choice['Ticket Class']
+
+X_train_ticket_class_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_class_choice/training/entire/X_train.csv', index=False)
+y_train_ticket_class_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_class_choice/training/entire/y_train.csv', index=False)
