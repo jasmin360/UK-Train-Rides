@@ -39,3 +39,16 @@ y_train_ticket_class_choice = ticket_class_choice['Ticket Class']
 
 X_train_ticket_class_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_class_choice/training/entire/X_train.csv', index=False)
 y_train_ticket_class_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_class_choice/training/entire/y_train.csv', index=False)
+
+
+#purchase type (channel) prediction
+purchase_channel = mldp.df.copy()
+purchase_channel = purchase_channel.loc[:, ['Time of Purchase','Lead Time','Ticket Type','Purchase Type']]
+
+purchase_channel.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/purchase_channel.csv', index=False)
+
+X_train_purchase_channel = purchase_channel[['Time of Purchase','Lead Time','Ticket Type']]
+y_train_purchase_channel = purchase_channel['Purchase Type']
+
+X_train_purchase_channel.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/training/entire/X_train.csv', index=False)
+y_train_purchase_channel.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/training/entire/y_train.csv', index=False)
