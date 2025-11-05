@@ -52,3 +52,16 @@ y_train_purchase_channel = purchase_channel['Purchase Type']
 
 X_train_purchase_channel.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/training/entire/X_train.csv', index=False)
 y_train_purchase_channel.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/training/entire/y_train.csv', index=False)
+
+
+#ticket type predicition (how early will a person buy the ticket)
+ticket_type_choice = mldp.df.copy()
+ticket_type_choice = ticket_type_choice.loc[:, ['Lead Time','Departure Station', 'Arrival Destination','Day of Week','Ticket Type']]
+
+ticket_type_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_type_choice/ticket_type_choice.csv', index=False)
+
+X_train_ticket_type_choice = ticket_type_choice[['Lead Time','Departure Station', 'Arrival Destination','Day of Week']] 
+y_train_ticket_type_choice = ticket_type_choice['Ticket Type']
+
+X_train_ticket_type_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_type_choice/training/entire/X_train.csv', index=False)
+y_train_ticket_type_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_type_choice/training/entire/y_train.csv', index=False)

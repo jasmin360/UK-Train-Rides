@@ -33,3 +33,21 @@ def delay_percentage(row):
     if row['Journey Status'].lower() == 'cancelled':
         return 'cancelled'
     return ((row['Actual Trip Time'] - row['Trip Time']) / row['Trip Time']) * 100
+
+def number_to_day(day_number):
+    if day_number == 0:
+        return 'Monday'
+    elif day_number == 1:
+        return 'Tuesday'
+    elif day_number == 2:
+        return 'Wednesday'
+    elif day_number == 3:
+        return 'Thursday'
+    elif day_number == 4:
+        return 'Friday'
+    elif day_number == 5:
+        return 'Saturday'
+    elif day_number == 6:
+        return 'Sunday'
+    else:
+        return None # Just in case

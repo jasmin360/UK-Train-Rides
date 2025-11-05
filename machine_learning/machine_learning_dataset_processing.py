@@ -32,3 +32,9 @@ df["Lead Time"] = ( df["Date of Journey"] - df["Date of Purchase"])
 df['Delay Category'] = df.apply(pfi.categorize_delay, axis=1)
 df.to_csv('../UK-Train-Rides/machine_learning/datasets/processed.csv', index=False)
 
+# Extract 'Day of Week' for journey
+df['Day of Week'] = df['Date of Journey'].dt.dayofweek
+df['Day of Week'] = df['Day of Week'].apply(pfi.number_to_day)
+
+
+
