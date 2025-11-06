@@ -65,3 +65,19 @@ y_train_ticket_type_choice = ticket_type_choice['Ticket Type']
 
 X_train_ticket_type_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_type_choice/training/entire/X_train.csv', index=False)
 y_train_ticket_type_choice.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_type_choice/training/entire/y_train.csv', index=False)
+
+
+
+#refund request likelihood 
+refund_request = mldp.df.copy()
+refund_request = refund_request[refund_request['Delay Category'] != 'On Time']
+refund_request['Percentage Delay Num'] = pd.to_numeric(refund_request['Percentage Delay'].replace('cancelled', -1)) #34an el model m4 hy2ra string f nos % fa lamma y4oof -1 yb2a da flag l "cancelled" w kda m4 ha7tag journey status
+refund_request = refund_request.loc[:, ['Percentage Delay Num','Price','Ticket Class','Refund Request']]
+
+refund_request.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/refund_request/refund_request.csv', index=False)
+
+X_train_refund_request = refund_request[['Percentage Delay Num','Price','Ticket Class']] 
+y_train_refund_request = refund_request['Refund Request']
+
+X_train_refund_request.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/refund_request/training/entire/X_train.csv', index=False)
+y_train_refund_request.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/refund_request/training/entire/y_train.csv', index=False)
