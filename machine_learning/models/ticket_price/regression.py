@@ -24,6 +24,11 @@ X_ticket_price['Lead Time'] = pd.to_timedelta(X_ticket_price['Lead Time']).dt.da
 
 X_train, X_test, y_train, y_test = train_test_split(X_ticket_price, y_ticket_price, test_size=0.3, random_state=42)
 
+X_train.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/train_test_split/X_train.csv', index=False)
+X_test.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/train_test_split/X_test.csv', index=False)
+y_train.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/train_test_split/y_train.csv', index=False)
+y_test.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/ticket_price/training/train_test_split/y_test.csv', index=False)
+
 categorical_features = ['Departure Station', 'Arrival Destination']
 numeric_features = ['Ticket Type', 'Railcard', 'Ticket Class', 'Lead Time']
 
