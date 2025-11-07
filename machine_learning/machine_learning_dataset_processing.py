@@ -33,8 +33,12 @@ df['Delay Category'] = df.apply(pfi.categorize_delay, axis=1)
 df.to_csv('../UK-Train-Rides/machine_learning/datasets/processed.csv', index=False)
 
 # Extract 'Day of Week' for journey
-df['Day of Week'] = df['Date of Journey'].dt.dayofweek
-df['Day of Week'] = df['Day of Week'].apply(pfi.number_to_day)
+df["Day of Week"] = df['Date of Journey'].dt.dayofweek
+df["Day of Week"] = df['Day of Week'].apply(pfi.number_to_day)
+
+
+#make a route column
+df["Route"] = df['Departure Station'] + '-' + df['Arrival Destination']
 
 
 

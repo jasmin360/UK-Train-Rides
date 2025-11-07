@@ -81,3 +81,31 @@ y_train_refund_request = refund_request['Refund Request']
 
 X_train_refund_request.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/refund_request/training/entire/X_train.csv', index=False)
 y_train_refund_request.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/refund_request/training/entire/y_train.csv', index=False)
+
+
+#revenue forecasting
+revenue_forecast = mldp.df.copy()
+revenue_forecast = revenue_forecast.groupby(['Date of Journey'])['Price'].sum().reset_index()
+
+revenue_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/revenue_forecast/revenue_forecast.csv', index=False)
+
+
+#demand forecasting (general)
+general_demand_forecast = mldp.df.copy()
+general_demand_forecast= general_demand_forecast.groupby(['Date of Journey']).size().reset_index()
+
+general_demand_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/general_demand_forecast/general_demand_forecast.csv', index=False)
+
+
+#route demand forecasting
+route_demand_forecast = mldp.df.copy()
+route_demand_forecast = route_demand_forecast.groupby(['Date of Journey', 'Route']).size().reset_index()
+
+route_demand_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_demand_forecast/route_demand_forecast.csv', index=False)
+
+
+#class demand forecasdting
+class_demand_forecast = mldp.df.copy()
+class_demand_forecast = class_demand_forecast.groupby(['Date of Journey', 'Ticket Class']).size().reset_index()
+
+class_demand_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/class_demand_forecast/class_demand_forecast.csv', index=False)
