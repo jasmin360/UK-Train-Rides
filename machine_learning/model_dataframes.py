@@ -2,14 +2,20 @@ import machine_learning_dataset_processing as mldp
 import pandas as pd
 
 #percentage delay per route
-route_delay = mldp.df.copy()
-route_delay= route_delay[route_delay['Percentage Delay'] != 'cancelled']
-route_delay= route_delay.loc[:,['Departure Station', 'Arrival Destination','Percentage Delay']]
+route_delay =pd.read_csv(r'../UK-Train-Rides/machine_learning/datasets/processed.csv')
+print(route_delay.columns)
+route_delay['Departure Time'] = pd.to_datetime(route_delay['Departure Time'], errors='coerce')
+route_delay= route_delay.loc[:,['Departure Station', 'Arrival Destination','Departure Time','Percentage Delay','Delay Category' ]]
+route_delay['Departure Hour'] = route_delay['Departure Time'].dt.hour
+route_delay['DayOfWeek'] = route_delay['Departure Time'].dt.dayofweek
+route_delay['IsWeekend'] = route_delay['DayOfWeek'].isin([5, 6]).astype(int)
+route_delay['Month'] = route_delay['Departure Time'].dt.month
+route_delay['IsPeakHour'] = route_delay['Departure Hour'].between(7, 9) | route_delay['Departure Hour'].between(16, 19)
 
-route_delay.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/route_delay.csv', index=False)
+route_delay.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/delay.csv', index=False)
 
-X_train_route_delay = route_delay[['Departure Station', 'Arrival Destination']]
-y_train_route_delay = route_delay['Percentage Delay']
+X_train_route_delay = route_delay[['Departure Station', 'Arrival Destination','Departure Time','Departure Hour','DayOfWeek','IsWeekend','Month','IsPeakHour']]
+y_train_route_delay = route_delay['Delay Category']
 
 X_train_route_delay.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/entire/X_train.csv', index=False)
 y_train_route_delay.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/entire/y_train.csv', index=False)
