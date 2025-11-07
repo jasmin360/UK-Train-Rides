@@ -5,25 +5,21 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import  accuracy_score
 from sklearn.ensemble import RandomForestClassifier
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import numberize as num
 import joblib
 
 X_purchase_channel = pd.read_csv( '../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/training/entire/X_train.csv')
 y_purchase_channel = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/purchase_channel/training/entire/y_train.csv').squeeze("columns")
 
-def numberize_purchase_channel(x):
-    if x.lower() == "online":
-        return 0
-    elif x.lower() == "station":
-        return 1
 
-y_purchase_channel = y_purchase_channel.apply(numberize_purchase_channel)
+y_purchase_channel = y_purchase_channel.apply(num.numberize_purchase_channel)
 y_purchase_channel = pd.to_numeric(y_purchase_channel, errors='coerce')
 
-def time_to_seconds(time_str):
-    h, m, s = map(int, time_str.split(':'))
-    return h*3600 + m*60 + s
 
-X_purchase_channel['Time of Purchase'] = X_purchase_channel['Time of Purchase'].apply(time_to_seconds)
+X_purchase_channel['Time of Purchase'] = X_purchase_channel['Time of Purchase'].apply(num.time_to_seconds)
 
 X_purchase_channel['Lead Time'] = pd.to_timedelta(X_purchase_channel['Lead Time']).dt.days
 

@@ -5,27 +5,18 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import  accuracy_score
 from sklearn.ensemble import RandomForestClassifier
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import numberize as num
 import joblib
 
 
 X_route_delay = pd.read_csv( '../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/entire/X_train.csv')
 y_route_delay = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/entire/y_train.csv').squeeze("columns")
 
-def numberize_delay_category(x):
-    if x == "On Time":
-        return 0
-    elif x == "Short":
-        return 1
-    elif x == "Medium":
-        return 2
-    elif x == "Long":
-        return 3
-    elif x== "Extreme":
-        return 4
-    elif x == "Cancelled":
-        return -1
 
-y_route_delay= y_route_delay.apply(numberize_delay_category)
+y_route_delay= y_route_delay.apply(num.numberize_delay_category)
 
 # Ensure numeric
 y_route_delay = pd.to_numeric(y_route_delay, errors='coerce')
