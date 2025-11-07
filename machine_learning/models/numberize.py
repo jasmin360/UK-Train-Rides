@@ -19,9 +19,9 @@ def numberize_delay_category(x):
         return -1
     
 def numberize_ticket_class(x):
-    if x == "Standard":
+    if x.lower() == "standard":
         return 0
-    elif x == "First Class":
+    elif x.lower() == "first class":
         return 1
     
 def numberize_purchase_channel(x):
@@ -33,3 +33,21 @@ def numberize_purchase_channel(x):
 def time_to_seconds(time_str):
     h, m, s = map(int, time_str.split(':'))
     return h*3600 + m*60 + s
+
+def numberize_ticket_type(x):
+    if x.lower() == "advance":
+        return 0
+    elif x.lower() == "anytime":
+        return 1
+    elif x.lower() == "off-peak":
+        return 2
+    
+def numberize_railcard(x):
+    if x == "no railcard":
+        return 0
+    elif x == "senior":
+        return 1
+    elif x == "disabled":
+        return 2
+    elif x == "adult":
+        return 3

@@ -55,4 +55,4 @@ y_pred = pipeline.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model Accuracy: {accuracy*100:.2f}%")
 
-#joblib.dump(pipeline, '../UK-Train-Rides/machine_learning/models/purchase_channel/categorical.pkl')
+joblib.dump(pipeline, '../UK-Train-Rides/machine_learning/models/refund_request/categorical.pkl')
