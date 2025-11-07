@@ -51,3 +51,16 @@ def numberize_railcard(x):
         return 2
     elif x == "adult":
         return 3
+
+
+def numberize_day_of_week(x):
+    days = {
+        'Monday': 0,
+        'Tuesday': 1,
+        'Wednesday': 2,
+        'Thursday': 3,
+        'Friday': 4,
+        'Saturday': 5,
+        'Sunday': 6
+    }
+    return days.get(x, -1)  
