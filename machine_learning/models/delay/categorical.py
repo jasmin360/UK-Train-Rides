@@ -1,9 +1,9 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder, StandardScaler, LabelEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import  accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 
@@ -48,6 +48,10 @@ X_route_delay['AvgRouteDelay'] = X_route_delay['AvgRouteDelay'].fillna(X_route_d
 
 X_train, X_test, y_train, y_test = train_test_split(X_route_delay, y_route_delay, test_size=0.3, random_state=42)
 
+X_train.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/train_test_split/X_train.csv', index=False)
+y_train.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/train_test_split/y_train.csv', index=False)    
+X_test.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/train_test_split/X_test.csv', index=False)
+y_test.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_delay/training/train_test_split/y_test.csv', index=False)
 
 categorical_features = ['Departure Station', 'Arrival Destination', 'Route']
 numeric_features = ['Departure Hour', 'Departure Day', 'IsPeakHour', 'AvgRouteDelay', 'DayOfWeek', 'IsWeekend', 'Month']
