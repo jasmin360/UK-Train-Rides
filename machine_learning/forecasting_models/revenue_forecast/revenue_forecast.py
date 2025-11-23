@@ -5,9 +5,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import GradientBoostingRegressor
 import matplotlib.pyplot as plt
 
-# ------------------------------------------------
-# 1. Load & Preprocess Data
-# ------------------------------------------------
+
 df = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/revenue_forecast/revenue_forecast.csv')
 
 df["Date of Journey"] = pd.to_datetime(df["Date of Journey"])
@@ -73,6 +71,7 @@ plt.title("Next 30-Day Revenue Forecast")
 plt.xlabel("Date")
 plt.ylabel("Predicted Revenue")
 plt.legend()
+plt.grid(True)
 plt.show()
 
 print("\nNext 30-day forecast:")

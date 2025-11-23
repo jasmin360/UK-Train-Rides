@@ -1,96 +1,129 @@
-
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
-import seaborn as sns
+import os
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import mean_squared_error
-from sklearn.ensemble import RandomForestRegressor
-
-
-df = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/class_demand_forecast/class_demand_forecast.csv')  # replace with your file
-
-
+# -------------------------
+# 0. Load data
+# -------------------------
+df = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/class_demand_forecast/class_demand_forecast.csv')
 df["Date of Journey"] = pd.to_datetime(df["Date of Journey"])
+df = df.sort_values("Date of Journey")
+df = df.set_index("Date of Journey")
 
+# -------------------------
+# Parameters
+# -------------------------
+CLASS_COL = "Ticket Class"
+DEMAND_COL = "Demand"
+FORECAST_HORIZON = 30       # Next 30 days to forecast
+TEST_HOLDOUT_DAYS = 30      # Last N days for test evaluation
+MIN_TRAIN_ROWS = 60         # Minimum rows to train model
 
-df["Year"] = df["Date of Journey"].dt.year
-df["Month"] = df["Date of Journey"].dt.month
-df["Day"] = df["Date of Journey"].dt.day
-df["Weekday"] = df["Date of Journey"].dt.weekday
+# -------------------------
+# 1. Aggregate demand per day & class
+# -------------------------
+df_reset = df.reset_index()
+df_agg = df_reset.groupby(["Date of Journey", CLASS_COL], as_index=False)[DEMAND_COL].sum()
+df_agg = df_agg.set_index("Date of Journey")  # index is date
 
+# -------------------------
+# 2. List of ticket classes
+# -------------------------
+classes = df_agg[CLASS_COL].unique().tolist()
+print(f"Found ticket classes: {classes}")
 
-X = df[["Ticket Class", "Year", "Month", "Day", "Weekday"]]
-y = df["Demand"]   
+# Folder to save forecast plots
+os.makedirs("forecast_plots", exist_ok=True)
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('cat', OneHotEncoder(), ["Ticket Class"]),
-        ('num', 'passthrough', ["Year", "Month", "Day", "Weekday"])
-    ]
-)
+# Where we store all forecasts
+all_forecasts = []
 
+# -------------------------
+# 3. Helper: create features for a demand series
+# -------------------------
+def make_features(series: pd.Series):
+    df_feat = pd.DataFrame({"demand": series})
+    df_feat["dayofweek"] = df_feat.index.dayofweek
+    df_feat["day"] = df_feat.index.day
+    df_feat["month"] = df_feat.index.month
+    df_feat["time_idx"] = np.arange(len(df_feat))
+    return df_feat
 
-model = Pipeline(steps=[
-    ('prep', preprocessor),
-    ('regressor', RandomForestRegressor(n_estimators=200, random_state=42))
-])
+# -------------------------
+# 4. Loop over ticket classes
+# -------------------------
+for cls in classes:
+    print(f"\n--- Processing class: {cls} ---")
+    
+    # Select series for this class
+    series = df_agg[df_agg[CLASS_COL] == cls][DEMAND_COL].copy()
+    
+    # Ensure all days are present
+    idx = pd.date_range(start=series.index.min(), end=series.index.max(), freq="D")
+    series = series.reindex(idx, fill_value=0)
+    series.index.name = "Date"
+    
+    # Create features
+    feat = make_features(series).drop(columns=["demand"])
+    target = series.copy()
+    data = feat.join(target.rename("demand")).dropna()
+    
+    # Train/test split
+    train_size = max(0, len(data) - TEST_HOLDOUT_DAYS)
+    X_train = data.iloc[:train_size].drop(columns="demand")
+    y_train = data.iloc[:train_size]["demand"]
+    X_test = data.iloc[train_size:].drop(columns="demand")
+    y_test = data.iloc[train_size:]["demand"]
+    
+    # Train model
+    model = GradientBoostingRegressor(random_state=42)
+    model.fit(X_train, y_train)
+    
+    # Evaluate
+    y_pred = model.predict(X_test)
+    mae = mean_absolute_error(y_test, y_pred)
+    print(f"MAE on last {TEST_HOLDOUT_DAYS} days: {mae:.2f}")
+    
+    # Forecast next 30 days autoregressively
+    future_dates = pd.date_range(start=series.index[-1] + pd.Timedelta(days=1),
+                                 periods=FORECAST_HORIZON, freq="D")
+    future_preds = []
+    last_known = series.copy()
+    
+    for d in future_dates:
+        row = {}
+        row["dayofweek"] = d.dayofweek
+        row["day"] = d.day
+        row["month"] = d.month
+        row["time_idx"] = len(series) + len(future_preds)
+        
+        X_row = pd.DataFrame([row])
+        pred_val = float(model.predict(X_row)[0])
+        future_preds.append(pred_val)
+        
+        last_known = pd.concat([last_known, pd.Series([pred_val], index=[d])])
 
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-print("\nTraining model...")
-model.fit(X_train, y_train)
-
-
-y_pred = model.predict(X_test)
-mse = mean_squared_error(y_test, y_pred)
-print(f"\nMean Squared Error: {mse:.3f}")
-
-
-plt.figure(figsize=(8, 5))
-plt.scatter(y_test, y_pred)
-plt.xlabel("Actual Demand")
-plt.ylabel("Predicted Demand")
-plt.title("Actual vs Predicted Class Demand")
-plt.grid(True)
-plt.show()
-
-
-plt.figure(figsize=(8, 5))
-sns.boxplot(data=df, x="Ticket Class", y="Demand")
-plt.title("Demand Distribution by Class")
-plt.ylabel("Demand")
-plt.show()
-
-
-plt.figure(figsize=(12, 5))
-plt.plot(df["Date of Journey"], df["Demand"])
-plt.title("Demand Over Time")
-plt.xlabel("Date")
-plt.ylabel("Demand")
-plt.xticks(rotation=45)
-plt.show()
-
-# --------------------------------
-# Future Forecast Example
-# --------------------------------
-future_input = pd.DataFrame({
-    "Ticket Class": ["first", "standard"],
-    "Year": [2026, 2026],
-    "Month": [1, 1],
-    "Day": [15, 15],
-    "Weekday": [4, 4]
-})
-
-future_pred = model.predict(future_input)
-
-print("\nFuture Prediction Example:")
-for cls, pred in zip(future_input["Ticket Class"], future_pred):
-    print(f"Predicted demand for {cls}: {pred:.1f}")
+    
+    # Save forecast
+    df_future = pd.DataFrame({
+        "Date": future_dates,
+        CLASS_COL: cls,
+        "Predicted_Demand": future_preds
+    })
+    all_forecasts.append(df_future)
+    
+#plots
+    plt.figure(figsize=(12,5))
+    lookback = 30
+    plt.plot(series.index[-lookback:], series[-lookback:], label="History (last 30 days)")
+    plt.plot(future_dates, future_preds, label=f"Forecast (next {FORECAST_HORIZON} days)")
+    plt.title(f"Ticket Class: '{cls}' — MAE: {mae:.2f}")
+    plt.xlabel("Date")
+    plt.ylabel("Predicted Demand")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
