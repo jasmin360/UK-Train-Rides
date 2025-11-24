@@ -97,20 +97,30 @@ revenue_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datas
 
 #demand forecasting (general)
 general_demand_forecast = mldp.df.copy()
-general_demand_forecast= general_demand_forecast.groupby(['Date of Journey']).size().reset_index()
+general_demand_forecast= general_demand_forecast.groupby(['Date of Journey']).size().reset_index(name='Demand')
 
 general_demand_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/general_demand_forecast/general_demand_forecast.csv', index=False)
 
 
 #route demand forecasting
 route_demand_forecast = mldp.df.copy()
-route_demand_forecast = route_demand_forecast.groupby(['Date of Journey', 'Route']).size().reset_index()
+route_demand_forecast = route_demand_forecast.groupby(['Date of Journey', 'Route']).size().reset_index(name='Demand')
 
 route_demand_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_demand_forecast/route_demand_forecast.csv', index=False)
 
 
 #class demand forecasdting
 class_demand_forecast = mldp.df.copy()
-class_demand_forecast = class_demand_forecast.groupby(['Date of Journey', 'Ticket Class']).size().reset_index()
+class_demand_forecast = class_demand_forecast.groupby(['Date of Journey', 'Ticket Class']).size().reset_index(name='Demand')
 
 class_demand_forecast.to_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/class_demand_forecast/class_demand_forecast.csv', index=False)
+
+
+data_vis=pd.read_csv(r'../UK-Train-Rides/machine_learning/datasets/processed.csv')
+data_vis['Departure Time'] = pd.to_datetime(data_vis['Departure Time'], errors='coerce')
+data_vis['Departure Hour'] = data_vis['Departure Time'].dt.hour
+data_vis['DayOfWeek'] = data_vis['Departure Time'].dt.dayofweek
+data_vis['IsWeekend'] = data_vis['DayOfWeek'].isin([5, 6]).astype(int)
+data_vis['Month'] = data_vis['Departure Time'].dt.month
+data_vis['IsPeakHour'] = data_vis['Departure Hour'].between(7, 9) | data_vis['Departure Hour'].between(16, 19)
+data_vis.to_csv('../UK-Train-Rides/drafts/data_vis.csv', index=False)
