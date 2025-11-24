@@ -117,9 +117,10 @@ for cls in classes:
     
 #plots
     plt.figure(figsize=(12,5))
-    lookback = 30
-    plt.plot(series.index[-lookback:], series[-lookback:], label="History (last 30 days)")
-    plt.plot(future_dates, future_preds, label=f"Forecast (next {FORECAST_HORIZON} days)")
+    lookback = 90
+    plt.plot(series.index[-lookback:], series[-lookback:], label="History (last 90 days)")
+    plt.plot(X_test.index, y_pred, label="Test Predictions", linestyle='--', color='orange')
+    plt.plot(future_dates, future_preds, label=f"Forecast (next {FORECAST_HORIZON} days)", linestyle='--', color='green')
     plt.title(f"Ticket Class: '{cls}' — MAE: {mae:.2f}")
     plt.xlabel("Date")
     plt.ylabel("Predicted Demand")

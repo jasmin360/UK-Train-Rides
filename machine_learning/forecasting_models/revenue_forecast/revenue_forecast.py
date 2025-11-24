@@ -37,12 +37,7 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 print(f"\nMean Absolute Error: {mae:.3f}")
 
-plt.figure(figsize=(10,5))
-plt.plot(y_test.index, y_test, label="Actual")
-plt.plot(y_test.index, y_pred, label="Predicted")
-plt.legend()
-plt.title("Daily Revenue Forecast (Test Set)")
-plt.show()
+
 
 #forecast next 30 days
 future_dates = pd.date_range(start=df.index[-1] + pd.Timedelta(days=1),
@@ -65,14 +60,17 @@ for d in future_dates:
 
 
 #forecast plot
-plt.figure(figsize=(10,5))
-plt.plot(future_df.index, future_df["Predicted Revenue"], label="Forecast")
-plt.title("Next 30-Day Revenue Forecast")
+plt.figure(figsize=(12,5))
+lookback = 90
+plt.plot(df.index, y, label="Historical Revenue")
+plt.plot(future_df.index, future_df["Predicted Revenue"], label="Forecasted Revenue", linestyle='--', color='green')
+plt.plot(X_test.index, y_pred, label="Test Predictions", linestyle='--', color='orange')
+plt.title("Revenue Forecast")
 plt.xlabel("Date")
-plt.ylabel("Predicted Revenue")
+plt.ylabel("Revenue")
 plt.legend()
 plt.grid(True)
 plt.show()
 
-print("\nNext 30-day forecast:")
+print("\nFuture 30 Days Revenue Forecast:")
 print(future_df)

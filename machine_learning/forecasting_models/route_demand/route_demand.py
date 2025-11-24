@@ -5,9 +5,7 @@ from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 import os
 
-# -------------------------
-# Load data
-# -------------------------
+
 df = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/route_demand_forecast/route_demand_forecast.csv')
 df["Date of Journey"] = pd.to_datetime(df["Date of Journey"])
 df = df.sort_values("Date of Journey")
@@ -21,9 +19,7 @@ TEST_HOLDOUT_DAYS = 30
 # Ensure output folder for plots
 os.makedirs("forecast_plots_routes", exist_ok=True)
 
-# -------------------------
-# Aggregate demand per day & route
-# -------------------------
+
 df_reset = df.reset_index()
 df_agg = df_reset.groupby(["Date of Journey", ROUTE_COL], as_index=False)[DEMAND_COL].sum()
 df_agg = df_agg.set_index("Date of Journey")
@@ -32,9 +28,7 @@ df_agg = df_agg.set_index("Date of Journey")
 routes = df_agg[ROUTE_COL].unique().tolist()
 print(f"Found routes: {routes}")
 
-# -------------------------
-# Helper: create features for a demand series
-# -------------------------
+
 def make_features(series: pd.Series):
     df_feat = pd.DataFrame({"demand": series})
     df_feat["dayofweek"] = df_feat.index.dayofweek
@@ -110,3 +104,5 @@ for route in routes:
     plt.close()
     
 print("\nForecast plots saved in folder 'forecast_plots_routes/'")
+print("\nFuture 30 Days Route Demand Forecasts")
+print(future_preds)

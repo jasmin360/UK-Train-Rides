@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
@@ -22,6 +23,7 @@ y_route_delay= y_route_delay.apply(num.numberize_delay_category)
 y_route_delay = pd.to_numeric(y_route_delay, errors='coerce')
 
 
+X_route_delay['Date of Journey'] = pd.to_datetime(X_route_delay['Date of Journey'], errors='coerce')
 X_route_delay['Departure Time'] = pd.to_datetime(X_route_delay['Departure Time'], errors='coerce')
 X_route_delay['Departure Day'] = X_route_delay['Departure Time'].dt.dayofweek
 X_route_delay = X_route_delay.drop(columns=['Departure Time'])
@@ -35,6 +37,7 @@ avg_delay = temp_df.groupby('Route')['Percentage Delay'].mean().to_dict()
 X_route_delay['AvgRouteDelay'] = X_route_delay['Route'].map(avg_delay)
 X_route_delay['AvgRouteDelay'] = X_route_delay['AvgRouteDelay'].fillna(X_route_delay['AvgRouteDelay'].mean())
 
+X_route_delay = X_route_delay.drop(columns=['Date of Journey'])
 
 
 X_train, X_test, y_train, y_test = train_test_split(X_route_delay, y_route_delay, test_size=0.3, random_state=42)
@@ -79,9 +82,3 @@ joblib.dump(pipeline, '../UK-Train-Rides/machine_learning/models/delay/categoric
 print("model saved")
 
 
-comparison_df = pd.DataFrame({
-    'Actual Category': y_test.values,
-    'Predicted Category': y_pred
-})
-print("\n sample")
-print(comparison_df.head(50).to_string(index=False))
