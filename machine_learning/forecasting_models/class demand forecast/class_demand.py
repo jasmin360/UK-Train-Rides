@@ -5,45 +5,32 @@ from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 import os
 
-# -------------------------
-# 0. Load data
-# -------------------------
+
 df = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/class_demand_forecast/class_demand_forecast.csv')
 df["Date of Journey"] = pd.to_datetime(df["Date of Journey"])
 df = df.sort_values("Date of Journey")
 df = df.set_index("Date of Journey")
 
-# -------------------------
-# Parameters
-# -------------------------
+
 CLASS_COL = "Ticket Class"
 DEMAND_COL = "Demand"
 FORECAST_HORIZON = 30       # Next 30 days to forecast
 TEST_HOLDOUT_DAYS = 30      # Last N days for test evaluation
 MIN_TRAIN_ROWS = 60         # Minimum rows to train model
 
-# -------------------------
-# 1. Aggregate demand per day & class
-# -------------------------
+
 df_reset = df.reset_index()
 df_agg = df_reset.groupby(["Date of Journey", CLASS_COL], as_index=False)[DEMAND_COL].sum()
 df_agg = df_agg.set_index("Date of Journey")  # index is date
 
-# -------------------------
-# 2. List of ticket classes
-# -------------------------
+
 classes = df_agg[CLASS_COL].unique().tolist()
 print(f"Found ticket classes: {classes}")
 
-# Folder to save forecast plots
-os.makedirs("forecast_plots", exist_ok=True)
 
-# Where we store all forecasts
 all_forecasts = []
 
-# -------------------------
-# 3. Helper: create features for a demand series
-# -------------------------
+
 def make_features(series: pd.Series):
     df_feat = pd.DataFrame({"demand": series})
     df_feat["dayofweek"] = df_feat.index.dayofweek
@@ -52,9 +39,7 @@ def make_features(series: pd.Series):
     df_feat["time_idx"] = np.arange(len(df_feat))
     return df_feat
 
-# -------------------------
-# 4. Loop over ticket classes
-# -------------------------
+
 for cls in classes:
     print(f"\n--- Processing class: {cls} ---")
     
@@ -127,4 +112,6 @@ for cls in classes:
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    safe_name = str(cls)
+    os.makedirs("forecast_results/class_demand_forecast", exist_ok=True)
+    plt.savefig(f"forecast_results/class_demand_forecast/forecast_{safe_name}.png")

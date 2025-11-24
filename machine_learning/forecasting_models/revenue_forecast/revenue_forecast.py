@@ -4,6 +4,7 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import GradientBoostingRegressor
 import matplotlib.pyplot as plt
+import os
 
 
 df = pd.read_csv('../UK-Train-Rides/machine_learning/datasets/model_datasets/revenue_forecast/revenue_forecast.csv')
@@ -70,7 +71,8 @@ plt.xlabel("Date")
 plt.ylabel("Revenue")
 plt.legend()
 plt.grid(True)
-plt.show()
+os.makedirs("forecast_results/revenue_forecast", exist_ok=True)
+plt.savefig(f"forecast_results/revenue_forecast/revenue_forecast.png")
 
 print("\nFuture 30 Days Revenue Forecast:")
 print(future_df)

@@ -100,7 +100,8 @@ for route in routes:
     plt.grid(True)
     plt.tight_layout()
     safe_name = str(route).replace(" ", "_").replace("/", "_")
-    plt.savefig(f"forecast_plots_routes/forecast_{safe_name}.png")
+    os.makedirs("forecast_results/forecast_plots_routes", exist_ok=True)
+    plt.savefig(f"forecast_results/forecast_plots_routes/forecast_{safe_name}.png")
     plt.close()
     
 print("\nForecast plots saved in folder 'forecast_plots_routes/'")
