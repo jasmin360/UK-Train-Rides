@@ -83,7 +83,7 @@ for route in routes:
             "time_idx": len(series) + len(future_preds)
         }
         X_row = pd.DataFrame([row])
-        pred_val = float(model.predict(X_row)[0])
+        pred_val = int(model.predict(X_row)[0])
         future_preds.append(pred_val)
         last_known = pd.concat([last_known, pd.Series([pred_val], index=[d])])
     
@@ -107,3 +107,4 @@ for route in routes:
 print("\nForecast plots saved in folder 'forecast_plots_routes/'")
 print("\nFuture 30 Days Route Demand Forecasts")
 print(future_preds)
+print(future_dates)

@@ -86,7 +86,7 @@ for cls in classes:
         row["time_idx"] = len(series) + len(future_preds)
         
         X_row = pd.DataFrame([row])
-        pred_val = float(model.predict(X_row)[0])
+        pred_val = int(model.predict(X_row)[0])
         future_preds.append(pred_val)
         
         last_known = pd.concat([last_known, pd.Series([pred_val], index=[d])])
@@ -115,3 +115,4 @@ for cls in classes:
     safe_name = str(cls)
     os.makedirs("forecast_results/class_demand_forecast", exist_ok=True)
     plt.savefig(f"forecast_results/class_demand_forecast/forecast_{safe_name}.png")
+    print(f"Forecast for class '{cls}':\n", df_future)

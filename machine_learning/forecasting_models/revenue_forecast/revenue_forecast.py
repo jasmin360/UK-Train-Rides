@@ -76,3 +76,4 @@ plt.savefig(f"forecast_results/revenue_forecast/revenue_forecast.png")
 
 print("\nFuture 30 Days Revenue Forecast:")
 print(future_df)
+print(future_df.index)

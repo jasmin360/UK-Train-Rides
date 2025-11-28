@@ -63,7 +63,7 @@ for d in future_dates:
         "time_idx": len(series) + len(future_preds)
     }
     X_row = pd.DataFrame([row])
-    pred_val = float(model.predict(X_row)[0])
+    pred_val = int(model.predict(X_row)[0])
     future_preds.append(pred_val)
     last_known = pd.concat([last_known, pd.Series([pred_val], index=[d])])
 
@@ -84,3 +84,4 @@ plt.grid(True)
 plt.tight_layout()
 os.makedirs("forecast_results/general_demand_forecast", exist_ok=True)
 plt.savefig(f"forecast_results/general_demand_forecast/general_demand.png")
+print("\n", future_preds)
